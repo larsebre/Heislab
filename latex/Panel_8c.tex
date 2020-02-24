@@ -1,0 +1,66 @@
+\hypertarget{Panel_8c}{}\section{source/\+Panel.c File Reference}
+\label{Panel_8c}\index{source/\+Panel.\+c@{source/\+Panel.\+c}}
+
+
+Implementation of \hyperlink{Panel_8h}{Panel.\+h}.  
+
+
+{\ttfamily \#include \char`\"{}Panel.\+h\char`\"{}}\newline
+Include dependency graph for Panel.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{Panel_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{Panel_8c_acad85b10af5496b4552ead8241419793}\label{Panel_8c_acad85b10af5496b4552ead8241419793}} 
+void \hyperlink{Panel_8c_acad85b10af5496b4552ead8241419793}{clean\+Orders} (int $\ast$orders)
+\begin{DoxyCompactList}\small\item\em clean\+Orders function to clear all orders \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a03e8459eaa863a4c7e3a21985f407618}\label{Panel_8c_a03e8459eaa863a4c7e3a21985f407618}} 
+void \hyperlink{Panel_8c_a03e8459eaa863a4c7e3a21985f407618}{panel\+Default} (\hyperlink{structPanel}{Panel} $\ast$p)
+\begin{DoxyCompactList}\small\item\em panel\+Default function to initialize panel \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a5192947f9c6d4e31b11ae7afbc1800dc}\label{Panel_8c_a5192947f9c6d4e31b11ae7afbc1800dc}} 
+int \hyperlink{Panel_8c_a5192947f9c6d4e31b11ae7afbc1800dc}{check\+Orders} (int $\ast$orders, int floor)
+\begin{DoxyCompactList}\small\item\em check\+Orders function to check if order is already in array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a0934eefc1f95dfa55dc0f800d5025d10}\label{Panel_8c_a0934eefc1f95dfa55dc0f800d5025d10}} 
+void \hyperlink{Panel_8c_a0934eefc1f95dfa55dc0f800d5025d10}{left\+\_\+shift\+Orders} (int $\ast$orders)
+\begin{DoxyCompactList}\small\item\em left\+\_\+shift\+Orders function to shift orders to the left side \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a1fd21468d55f6b120450c76aff0fa254}\label{Panel_8c_a1fd21468d55f6b120450c76aff0fa254}} 
+void \hyperlink{Panel_8c_a1fd21468d55f6b120450c76aff0fa254}{push\+Orders} (\hyperlink{structPanel}{Panel} $\ast$p)
+\begin{DoxyCompactList}\small\item\em push\+Orders function to push orders into orders array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_ab9707d9a622844ffc0b1ae1b77764aaa}\label{Panel_8c_ab9707d9a622844ffc0b1ae1b77764aaa}} 
+void \hyperlink{Panel_8c_ab9707d9a622844ffc0b1ae1b77764aaa}{delay} (int number\+\_\+of\+\_\+seconds)
+\begin{DoxyCompactList}\small\item\em delay function to add time-\/delay \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_acd4f31281b2506ab5d009ffbf80f75da}\label{Panel_8c_acd4f31281b2506ab5d009ffbf80f75da}} 
+bool \hyperlink{Panel_8c_acd4f31281b2506ab5d009ffbf80f75da}{check\+\_\+if\+\_\+orders} (\hyperlink{structPanel}{Panel} $\ast$p)
+\begin{DoxyCompactList}\small\item\em check\+\_\+if\+\_\+orders function to check if there are orders in the orders array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a14d66228d3632853c0dd0284abb93c32}\label{Panel_8c_a14d66228d3632853c0dd0284abb93c32}} 
+int \hyperlink{Panel_8c_a14d66228d3632853c0dd0284abb93c32}{max\+Value} (\hyperlink{structPanel}{Panel} $\ast$p, \hyperlink{structState}{State} $\ast$s)
+\begin{DoxyCompactList}\small\item\em max\+Value function to return highest value in orders array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a058e0caf8945003a5acdef81b5f23f52}\label{Panel_8c_a058e0caf8945003a5acdef81b5f23f52}} 
+int \hyperlink{Panel_8c_a058e0caf8945003a5acdef81b5f23f52}{min\+Value} (\hyperlink{structPanel}{Panel} $\ast$p, \hyperlink{structState}{State} $\ast$s)
+\begin{DoxyCompactList}\small\item\em min\+Value function to return lowest value in orders array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_ada867e3dcf22c84eedf3b817670271dc}\label{Panel_8c_ada867e3dcf22c84eedf3b817670271dc}} 
+bool \hyperlink{Panel_8c_ada867e3dcf22c84eedf3b817670271dc}{series\+\_\+of\+\_\+downs} (\hyperlink{structPanel}{Panel} $\ast$p)
+\begin{DoxyCompactList}\small\item\em series\+\_\+of\+\_\+downs function to check if orders include a series of downward-\/orders \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a9360a1f76a37d2c36bf5b69248e7e822}\label{Panel_8c_a9360a1f76a37d2c36bf5b69248e7e822}} 
+bool \hyperlink{Panel_8c_a9360a1f76a37d2c36bf5b69248e7e822}{series\+\_\+of\+\_\+ups} (\hyperlink{structPanel}{Panel} $\ast$p)
+\begin{DoxyCompactList}\small\item\em series\+\_\+of\+\_\+ups function to check if orders include a series of upward-\/orders \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_ac80a446f487d6ceb3b2ea4cddb2a7881}\label{Panel_8c_ac80a446f487d6ceb3b2ea4cddb2a7881}} 
+int \hyperlink{Panel_8c_ac80a446f487d6ceb3b2ea4cddb2a7881}{closest\+Floor} (\hyperlink{structPanel}{Panel} $\ast$p, \hyperlink{structState}{State} $\ast$s)
+\begin{DoxyCompactList}\small\item\em closest function to return next floor to go to \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_a35a42e3c4897fed8fc3fe8993ccd8d4f}\label{Panel_8c_a35a42e3c4897fed8fc3fe8993ccd8d4f}} 
+void \hyperlink{Panel_8c_a35a42e3c4897fed8fc3fe8993ccd8d4f}{clear\+Executed} (\hyperlink{structPanel}{Panel} $\ast$p, \hyperlink{structState}{State} $\ast$s)
+\begin{DoxyCompactList}\small\item\em clear\+Executed function to clear executed orders \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{Panel_8c_ac551199759bbca39f38a41f0d80f9f07}\label{Panel_8c_ac551199759bbca39f38a41f0d80f9f07}} 
+void \hyperlink{Panel_8c_ac551199759bbca39f38a41f0d80f9f07}{reached\+\_\+\+Floor} (\hyperlink{structPanel}{Panel} $\ast$p, \hyperlink{structState}{State} $\ast$s)
+\begin{DoxyCompactList}\small\item\em reached\+\_\+\+Floor function to check if elevator has reached the correct floor \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation of \hyperlink{Panel_8h}{Panel.\+h}. 
+
