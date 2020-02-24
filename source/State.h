@@ -24,7 +24,8 @@ typedef struct{
     int betweenFloors[2];
     int Direction;
     int prevDirection;
-    int reachedFloor;
+    bool reachedFloor;
+    bool justPressedStop;
 }State;
 
 /**

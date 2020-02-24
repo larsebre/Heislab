@@ -18,7 +18,8 @@ void stateDefault(State* Elevator){
                 Elevator->betweenFloors[0] = i;
                 Elevator->betweenFloors[1] = i;
                 Elevator->Direction = 0;
-                Elevator->reachedFloor = false;
+                Elevator->reachedFloor = true;
+                Elevator->justPressedStop = false;
                 validState = true;
                 break;
             }
@@ -55,7 +56,7 @@ void stateControl(State* Elevator){
     switch (check){
         case 0:
             Elevator->betweenFloors[1] = Elevator->betweenFloors[0] + Elevator->Direction;
-            Elevator->reachedFloor = 0;
+            Elevator->reachedFloor = false;
             break;
             
         case 1:

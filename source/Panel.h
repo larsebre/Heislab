@@ -54,7 +54,7 @@ void pushOrders(Panel* p);
 /**
 * @brief delay function to add time-delay
 */
-void delay(int number_of_seconds);
+void delay(Panel* p, int number_of_seconds);
 
 /**
 * @brief maxValue function to return highest value in orders array

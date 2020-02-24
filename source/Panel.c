@@ -53,33 +53,51 @@ void pushOrders(Panel* p){
 					hardware_command_order_light(i, HARDWARE_ORDER_UP, 1);
 				 	left_shiftOrders(p->orders);
 					p->orders[3] = i;
-					p->orders[3+4] = 1;
+					if (i == 0){
+						p->orders[3+4] = -1;	
+					}else{
+						p->orders[3+4] = 1;
+					}
+					
 				 }
 			}else if (hardware_read_order(i, HARDWARE_ORDER_INSIDE)){
 				if (checkOrders(p->orders, i)<0){
 					hardware_command_order_light(i, HARDWARE_ORDER_INSIDE, 1);
 					left_shiftOrders(p->orders);
 				 	p->orders[3] = i;
-					 p->orders[3+4] = 0;
+					if (i == 0){
+						p->orders[3+4] = -1;
+					}else if (i == 3){
+						p->orders[3+4] = 1;
+					}else{
+						p->orders[3+4] = 0;
+					}
+					
 				 }
 			}else if (hardware_read_order(i, HARDWARE_ORDER_DOWN)){
 				if (checkOrders(p->orders, i)<0){
 					hardware_command_order_light(i, HARDWARE_ORDER_DOWN, 1);
 					left_shiftOrders(p->orders);
 				 	p->orders[3] = i;
-					p->orders[3+4] = -1;
+					if (i == 3){
+						p->orders[3+4] = 1;	
+					}else{
+						p->orders[3+4] = -1;
+					}
 				}
 			}
 		}
 	}
 }
 
-void delay(int number_of_seconds) { 
+void delay(Panel* p, int number_of_seconds) { 
 	
     int time = 1000000 * number_of_seconds;  
     clock_t start_time = clock(); 
-    while (clock() < start_time + time)
-    	;
+    while (clock() < start_time + time){
+		pushOrders(p);
+	}
+    	
 } 
 
 bool check_if_orders(Panel* p){
@@ -155,7 +173,7 @@ int closestFloor(Panel* p, State* s){
 				if (series_of_ups(p)){
 					return minValue(p,s);
 				}
-				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i] <= currentFloor)){
+				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i+4] != 1) && (p->orders[i] <= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
 				}
@@ -169,7 +187,7 @@ int closestFloor(Panel* p, State* s){
 				if (series_of_downs(p)){
 					return maxValue(p,s);
 				}
-				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i] >= currentFloor)){
+				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i+4] != -1) && (p->orders[i] >= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
 				}
@@ -203,10 +221,10 @@ void reached_Floor(Panel* p, State* s){
 	
 	if (check_if_orders(p) == true){
 		if (floor == s->betweenFloors[0]){
-        	s->reachedFloor = 1;
+        	s->reachedFloor = true;
 
     	}else{
-        	s->reachedFloor = 0;
+        	s->reachedFloor = false;
     	}  
 	}   
 }
