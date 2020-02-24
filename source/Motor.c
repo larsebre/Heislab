@@ -12,6 +12,12 @@ void elevatorDrive(Panel* p, State* s){
 		hardware_command_stop_light(1);
 		cleanOrders(p->orders);
 		s->justPressedStop = true;
+
+		if (s->betweenFloors[0] == s->betweenFloors[1]){
+			hardware_command_door_open(1);
+			p->orders[3] = s->betweenFloors[0];
+		}
+		hardware_command_door_open(0);
 	}
 	hardware_command_stop_light(0);
     
@@ -19,20 +25,32 @@ void elevatorDrive(Panel* p, State* s){
     	
     	int nextFloor = closestFloor(p, s);
 
-		/*if (s->justPressedStop){
-			if ((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2)){
-				s->betweenFloors[0] = s->betweenFloors[1];
+		if (s->justPressedStop){		//For right startup between floors
+			
+			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == -1)){
 				s->Direction = 1;
+				s->betweenFloors[0] = s->betweenFloors[1];
 				hardware_command_movement(HARDWARE_MOVEMENT_UP);
 			}
-			if ((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2)){
+			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == 1)){
+				s->Direction = 1;
 				s->betweenFloors[1] = s->betweenFloors[0];
-				s->Direction = -1;
-				hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-				
+				hardware_command_movement(HARDWARE_MOVEMENT_UP);
 			}
+
+			if (((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == -1)){
+				s->Direction = -1;
+				s->betweenFloors[1] = s->betweenFloors[0];
+				hardware_command_movement(HARDWARE_MOVEMENT_DOWN);	
+			}
+			if (((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == 1)){
+				s->Direction = -1;
+				s->betweenFloors[0] = s->betweenFloors[1];
+				hardware_command_movement(HARDWARE_MOVEMENT_DOWN);	
+			}
+
 			s->justPressedStop = false;
-		}*/
+		}
     	
     	if (s->reachedFloor == true){
     		clearExecuted(p, s);

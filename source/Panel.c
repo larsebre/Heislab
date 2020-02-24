@@ -173,6 +173,7 @@ int closestFloor(Panel* p, State* s){
 				if (series_of_ups(p)){
 					return minValue(p,s);
 				}
+					
 				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i+4] != 1) && (p->orders[i] <= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
@@ -187,6 +188,7 @@ int closestFloor(Panel* p, State* s){
 				if (series_of_downs(p)){
 					return maxValue(p,s);
 				}
+
 				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i+4] != -1) && (p->orders[i] >= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
@@ -195,6 +197,7 @@ int closestFloor(Panel* p, State* s){
 			s->Direction = 1;
 			return destination;
 	}
+
 	return destination;
 }
 
