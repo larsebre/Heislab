@@ -170,7 +170,7 @@ bool seriesOfUps(Panel* p){
 	return serie;
 }
 
-int closestFloor(Panel* p, State* s){
+int floorCalculations(Panel* p, State* s){
 
 	int direction = s->Direction;
 	int currentFloor = s->betweenFloors[0];
@@ -192,7 +192,7 @@ int closestFloor(Panel* p, State* s){
 			s->Direction = DOWN;
 			return destination;
 				
-		case 1:
+		case UP:
 			distance = currentFloor - maxValue(p,s);
 			for (int i = 3; i >= 0; i--){
 				if (seriesOfDowns(p)){
@@ -230,7 +230,7 @@ void clearExecuted(Panel* p, State* s){
 
 void floorReached(Panel* p, State* s){
 	
-	int floor = closestFloor(p,s);
+	int floor = floorCalculations(p,s);
 	
 	if (checkIfOrders(p) == true){
 		if (floor == s->betweenFloors[0]){

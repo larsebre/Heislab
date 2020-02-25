@@ -24,7 +24,7 @@ void elevatorDrive(Panel* p, State* s){
     
     if (checkIfOrders(p) == true){
     	
-    	int nextFloor = closestFloor(p, s);
+    	int nextFloor = floorCalculations(p, s);
 
 		if (s->justPressedStop){		//For right startup between floors
 			

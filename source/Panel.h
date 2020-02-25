@@ -100,7 +100,7 @@ bool seriesOfUps(Panel* p);
 * @param[in] p Panel containing orders to check out
 * @param[in] s State of elevator
 */
-int closestFloor(Panel* p, State* s);
+int floorCalculations(Panel* p, State* s);
 
 /**
 * @brief Function to clear executed orders

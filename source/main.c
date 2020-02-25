@@ -22,7 +22,7 @@ int main(){
 	
 	while(1){
 	
-  		int nextFloor = closestFloor(p_panel, p_state);
+  		int nextFloor = floorCalculations(p_panel, p_state);
   		
   		for (unsigned int i = 0; i<=7; i++){
   			printf("%d", p_panel->orders[i]);

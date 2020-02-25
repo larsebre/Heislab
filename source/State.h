@@ -23,7 +23,6 @@ typedef struct{
     int currentFloor;                               // -1 if between floors
     int betweenFloors[2];
     int Direction;
-    int prevDirection;
     bool reachedFloor;
     bool justPressedStop;
 }State;
