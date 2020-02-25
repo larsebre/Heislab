@@ -1,6 +1,6 @@
 /**
 * @file
-* @brief Struct and functionality to handle state of elevator
+* @brief Functionality for driving the elevator
 */
 
 #ifndef MOTOR_H
@@ -15,7 +15,9 @@
 #include "Panel.h"
 
 /**
-* @brief elevatorDrive main function for driving the elevator
+* @brief Main function for driving the elevator
+* @param[in] p Panel for the elevator to drive
+* @param[in] s State of the elevator to drive
 */
 void elevatorDrive(Panel* p, State* s);
 

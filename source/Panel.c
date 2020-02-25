@@ -7,9 +7,15 @@
 
 void cleanOrders(int* orders){
 
-	for (int i=0; i<8; i++){
+	for (int i = 0; i<8; i++){
 		orders[i] = -1;
 	}
+	for (int i = 0; i<=3; i++){
+		hardware_command_order_light(i, HARDWARE_ORDER_DOWN, 0);
+		hardware_command_order_light(i, HARDWARE_ORDER_INSIDE, 0);
+		hardware_command_order_light(i, HARDWARE_ORDER_UP, 0);
+	}
+
 }
 
 void panelDefault(Panel* p){
@@ -26,10 +32,10 @@ int checkOrders(int* orders, int floor){
 		return i;
 		}	
 	}
-	return -1;												//-1 shows that the order is executed
+	return -1;												
 }
 
-void left_shiftOrders(int* orders){		
+void lsOrders(int* orders){		
 
 	for (unsigned int i = 0; i <= 2; i++){
 		if (orders[i] == -1){			
@@ -50,11 +56,10 @@ void pushOrders(Panel* p){
 		if (check){
 			if (hardware_read_order(i, HARDWARE_ORDER_UP)){
 				 if (checkOrders(p->orders, i)<0){
-					hardware_command_order_light(i, HARDWARE_ORDER_UP, 1);
-				 	left_shiftOrders(p->orders);
+				 	lsOrders(p->orders);
 					p->orders[3] = i;
 					if (i == 0){
-						p->orders[3+4] = -1;	
+						p->orders[3+4] = 1;	
 					}else{
 						p->orders[3+4] = 1;
 					}
@@ -62,13 +67,12 @@ void pushOrders(Panel* p){
 				 }
 			}else if (hardware_read_order(i, HARDWARE_ORDER_INSIDE)){
 				if (checkOrders(p->orders, i)<0){
-					hardware_command_order_light(i, HARDWARE_ORDER_INSIDE, 1);
-					left_shiftOrders(p->orders);
+					lsOrders(p->orders);
 				 	p->orders[3] = i;
 					if (i == 0){
-						p->orders[3+4] = -1;
+						p->orders[3+4] = 0;
 					}else if (i == 3){
-						p->orders[3+4] = 1;
+						p->orders[3+4] = 0;
 					}else{
 						p->orders[3+4] = 0;
 					}
@@ -76,11 +80,10 @@ void pushOrders(Panel* p){
 				 }
 			}else if (hardware_read_order(i, HARDWARE_ORDER_DOWN)){
 				if (checkOrders(p->orders, i)<0){
-					hardware_command_order_light(i, HARDWARE_ORDER_DOWN, 1);
-					left_shiftOrders(p->orders);
+					lsOrders(p->orders);
 				 	p->orders[3] = i;
 					if (i == 3){
-						p->orders[3+4] = 1;	
+						p->orders[3+4] = -1;	
 					}else{
 						p->orders[3+4] = -1;
 					}
@@ -91,16 +94,23 @@ void pushOrders(Panel* p){
 }
 
 void delay(Panel* p, int number_of_seconds) { 
-	
+	setOrderLights(p);
     int time = 1000000 * number_of_seconds;  
     clock_t start_time = clock(); 
     while (clock() < start_time + time){
+		
+		while (hardware_read_obstruction_signal()){
+			pushOrders(p);
+			setOrderLights(p);
+			start_time = clock();
+		}
 		pushOrders(p);
+		setOrderLights(p);
 	}
     	
 } 
 
-bool check_if_orders(Panel* p){
+bool checkIfOrders(Panel* p){
 	
 	for (unsigned int i = 0; i<=3; i++){
 		if (p->orders[i] != -1) return true;
@@ -111,7 +121,7 @@ bool check_if_orders(Panel* p){
 
 int maxValue(Panel* p, State* s){
 	
-	if (check_if_orders(p) == false){
+	if (checkIfOrders(p) == false){
 		return s->betweenFloors[0];
 	}
 	int max = 0;
@@ -126,7 +136,7 @@ int maxValue(Panel* p, State* s){
 
 int minValue(Panel* p, State* s){
 
-	if (check_if_orders(p) == false){
+	if (checkIfOrders(p) == false){
 		return s->betweenFloors[0];
 	}	
 	int min = 3;
@@ -138,22 +148,22 @@ int minValue(Panel* p, State* s){
 	return min;	
 }
 
-bool series_of_downs(Panel* p){
+bool seriesOfDowns(Panel* p){
 
 	bool serie = false;
 	for (unsigned int i = 0; i<=2; i++){
-		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+4] == -1) && (p->orders[i+1+4] == -1)){
+		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+4] == ORDER_DOWN) && (p->orders[i+1+4] == ORDER_DOWN)){
 			serie = true;
 		} 
 	}
 	return serie;
 }
 
-bool series_of_ups(Panel* p){
+bool seriesOfUps(Panel* p){
 
 	bool serie = false;
 	for (unsigned int i = 0; i<=2; i++){
-		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+4] == 1) && (p->orders[i+1+4] == 1)){
+		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+4] == ORDER_UP) && (p->orders[i+1+4] == ORDER_UP)){
 			 serie = true;
 		}
 	}
@@ -167,34 +177,34 @@ int closestFloor(Panel* p, State* s){
 	int destination = minValue(p,s);
 	int distance;
 	switch (direction){
-		case -1:
+		case DOWN:
 			distance = currentFloor - minValue(p, s);
 			for (int i = 3; i >= 0; i--){
-				if (series_of_ups(p)){
+				if (seriesOfUps(p)){
 					return minValue(p,s);
 				}
 					
-				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i+4] != 1) && (p->orders[i] <= currentFloor)){
+				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i+4] != ORDER_UP) && (p->orders[i] <= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
 				}
 			}
-			s->Direction = -1;
+			s->Direction = DOWN;
 			return destination;
 				
 		case 1:
 			distance = currentFloor - maxValue(p,s);
 			for (int i = 3; i >= 0; i--){
-				if (series_of_downs(p)){
+				if (seriesOfDowns(p)){
 					return maxValue(p,s);
 				}
 
-				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i+4] != -1) && (p->orders[i] >= currentFloor)){
+				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i+4] != ORDER_DOWN) && (p->orders[i] >= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
 				}
 			}
-			s->Direction = 1;
+			s->Direction = UP;
 			return destination;
 	}
 
@@ -205,11 +215,11 @@ void clearExecuted(Panel* p, State* s){
 	
 	for (int i = 0; i<=3; i++){
 		if (p->orders[i] == s->betweenFloors[0]){
-			if (p->orders[i+4] == -1){
+			if (p->orders[i+4] == ORDER_DOWN){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_DOWN, 0);
-			}else if (p->orders[i+4] == 0){
+			}else if(p->orders[i+4] == ORDER_INSIDE){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_INSIDE, 0);
-			}else if (p->orders[i+4] == 1){
+			}else if(p->orders[i+4] == ORDER_UP){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_UP, 0);
 			}
 			p->orders[i] = -1;
@@ -218,11 +228,11 @@ void clearExecuted(Panel* p, State* s){
 	}
 }
 
-void reached_Floor(Panel* p, State* s){
+void floorReached(Panel* p, State* s){
 	
 	int floor = closestFloor(p,s);
 	
-	if (check_if_orders(p) == true){
+	if (checkIfOrders(p) == true){
 		if (floor == s->betweenFloors[0]){
         	s->reachedFloor = true;
 
@@ -230,4 +240,18 @@ void reached_Floor(Panel* p, State* s){
         	s->reachedFloor = false;
     	}  
 	}   
+}
+
+void setOrderLights(Panel* p){
+	for (int i = 0; i<=3; i++){
+		if(p->orders[i] != -1){
+			if (p->orders[i+4] == ORDER_DOWN){
+				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_DOWN, 1);
+			}else if(p->orders[i+4] == ORDER_INSIDE){
+				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_INSIDE, 1);
+			}else if(p->orders[i+4] == ORDER_UP){
+				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_UP, 1);
+			}
+		}
+	}	
 }

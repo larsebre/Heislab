@@ -17,7 +17,7 @@ void stateDefault(State* Elevator){
                 Elevator->prevFloor = Elevator->currentFloor;
                 Elevator->betweenFloors[0] = i;
                 Elevator->betweenFloors[1] = i;
-                Elevator->Direction = 0;
+                Elevator->Direction = STOP;
                 Elevator->reachedFloor = true;
                 Elevator->justPressedStop = false;
                 validState = true;

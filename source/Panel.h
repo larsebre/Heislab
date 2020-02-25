@@ -1,6 +1,6 @@
 /**
 * @file
-* @brief Functionality in conjunction with elevator panels
+* @brief Functionality in conjunction with elevator panel
 */
 
 #ifndef PANEL_H
@@ -15,7 +15,7 @@
 
 
 /**
-* @brief Panel struct to contain information about buttons pushed on elevator panels
+* @brief Struct to contain information about buttons pushed on elevator panels
 * @param[out] orders Two-dimensional array containing information about incoming orders
 * @param[out] stop Boolean variable to indicate whether stop-button is pushed or not
 * @param[out] obstruction Boolean variable to indicate whether obstruction-switch is active or not
@@ -27,73 +27,105 @@ typedef struct{
 }Panel;
 
 /**
-* @brief cleanOrders function to clear all orders
+* @brief Enum containing numbers according to type of order
+*/
+enum ORDERTYPE {ORDER_UP = 1, ORDER_INSIDE = 0, ORDER_DOWN = -1};
+
+/**
+* @brief Function to clear all orders
+* @param[in] orders Array of orders 
 */
 void cleanOrders(int* orders);
 
 /**
-* @brief checkOrders function to check if order is already in array
+* @brief Function to check if order is already in array, return -1 if not
+* @param[in] orders Array of orders
+* @param[in] floor Floor to check
 */
 int checkOrders(int* orders, int floor);
 
 /**
-* @brief panelDefault function to initialize panel
+* @brief Function to initialize panel
+* @param[in] p Panel to initialize 
 */
 void panelDefault(Panel* p);
 
 /**
-* @brief left_shiftOrders function to shift orders to the left side
+* @brief Function to shift orders to the left side
+* @param[in] orders Array to leftshift 
 */
-void left_shiftOrders(int* orders);
+void lsOrders(int* orders);
 
 /**
-* @brief pushOrders function to push orders into orders array
+* @brief Function to push orders into orders array
+* @param[in] p Panel to push orders into 
 */
 void pushOrders(Panel* p);
 
 /**
-* @brief delay function to add time-delay
+* @brief Function to add time-delay and be able to push orders while in delay
+* @param[in] p Panel to push orders into while in delay
+* @param[in] number_of_seconds Number of seconds to delay
 */
 void delay(Panel* p, int number_of_seconds);
 
 /**
-* @brief maxValue function to return highest value in orders array
+* @brief Function to return highest value in orders array
+* @param[in] p Panel containing orders to check out
+* @param[in] s State of elevator
 */
 int maxValue(Panel* p, State* s);
 
 /**
-* @brief minValue function to return lowest value in orders array
+* @brief Function to return lowest value in orders array
+* @param[in] p Panel containing orders to check out
+* @param[in] s State of elevator
 */
 int minValue(Panel* p, State* s);
 
 /**
-* @brief series_of_downs function to check if orders include a series of downward-orders
+* @brief seriesOfDowns function to check if orders include a series of downward-orders (return true if there is)
+* @param[in] p Panel containing orders to check out  
 */
-bool series_of_downs(Panel* p);
+bool seriesOfDowns(Panel* p);
 
 /**
-* @brief series_of_ups function to check if orders include a series of upward-orders
+* @brief seriesOfUps function to check if orders include a series of upward-orders (return true if there is)
+* @param[in] p Panel containing orders to check out   
 */
-bool series_of_ups(Panel* p);
+bool seriesOfUps(Panel* p);
 
 /**
-* @brief closest function to return next floor to go to
+* @brief Function to return next floor to go to
+* @param[in] p Panel containing orders to check out
+* @param[in] s State of elevator
 */
 int closestFloor(Panel* p, State* s);
 
 /**
-* @brief clearExecuted function to clear executed orders
+* @brief Function to clear executed orders
+* @param[in] p Panel containing executed orders to clear 
+* @param[in] s State of elevator
 */
 void clearExecuted(Panel* p, State* s);
 
 /**
-* @brief reached_Floor function to check if elevator has reached the correct floor
+* @brief Function to check if elevator has reached the correct floor
+* @param[in] p Panel containing orders to check out 
+* @param[in] s State of elevator
 */
-void reached_Floor(Panel* p, State* s);
+void floorReached(Panel* p, State* s);
 
 /**
-* @brief check_if_orders function to check if there are orders in the orders array
+* @brief Function to check if there are orders in the orders array
+* @param[in] p Panel containing orders to check out
 */
-bool check_if_orders(Panel* p);
+bool checkIfOrders(Panel* p);
+
+/**
+* @brief Function to set order lights
+* @param[in] p Panel containing orders we want to turn on lights for 
+*/
+void setOrderLights(Panel* p);
 
 #endif

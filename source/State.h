@@ -29,23 +29,30 @@ typedef struct{
 }State;
 
 /**
-* @brief cleanOrders function to clear all orders
+* @brief Enum containg values for elevator direction
 */
-//Only use for configuration outside the while-loop
+enum DIRECTION {UP = 1, STOP = 0, DOWN = -1};
+
+/**
+* @brief Function to initialize state of elevator (use only outside of while-loop)
+* @param[in] Elevator Elevator to initialize
+*/
 void stateDefault(State* Elevator);
 
 /**
-* @brief cleanOrders function to clear all orders
+* @brief Function to check if elevator is in a defined state (returns 1 if it is, 0 if not)
 */
 int checkState();
 
 /**
-* @brief cleanOrders function to clear all orders
+* @brief Function to return the floor elevator is in (needs to be in a defined state to return anything)
+* @param[in] check Parameter to tell function if elevator is in a defined state
 */
 int getFloor(int check);
 
 /**
-* @brief cleanOrders function to clear all orders
+* @brief Function to update the state of elevator throughout the loop
+* @param[in] Elevator Elevator to follow state of
 */
 void stateControl(State* Elevator);
 

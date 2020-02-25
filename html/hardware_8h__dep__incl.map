@@ -1,0 +1,9 @@
+<map id="source/hardware.h" name="source/hardware.h">
+<area shape="rect" id="node2" href="$Panel_8h.html" title="Functionality in conjunction with elevator panel. " alt="" coords="253,155,363,181"/>
+<area shape="rect" id="node4" href="$Motor_8h.html" title="Functionality for driving the elevator. " alt="" coords="5,229,115,256"/>
+<area shape="rect" id="node7" href="$State_8h.html" title="Struct and functionality to handle state of elevator. " alt="" coords="117,80,224,107"/>
+<area shape="rect" id="node3" href="$main_8c_source.html" title="source/main.c" alt="" coords="164,304,268,331"/>
+<area shape="rect" id="node6" href="$Panel_8c.html" title="Implementation of Panel.h. " alt="" coords="253,229,363,256"/>
+<area shape="rect" id="node5" href="$Motor_8c.html" title="Implementation of Motor.h. " alt="" coords="5,304,115,331"/>
+<area shape="rect" id="node8" href="$State_8c.html" title="Implementation of State.h. " alt="" coords="72,155,179,181"/>
+</map>

@@ -1,6 +1,6 @@
 /**
 * @file
-* @brief Struct and functionality to handle state of elevator
+* @brief Implementation of Motor.h
 */
 
 #include "Motor.h"
@@ -11,6 +11,7 @@ void elevatorDrive(Panel* p, State* s){
 		hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 		hardware_command_stop_light(1);
 		cleanOrders(p->orders);
+		setOrderLights(p);
 		s->justPressedStop = true;
 
 		if (s->betweenFloors[0] == s->betweenFloors[1]){
@@ -21,30 +22,30 @@ void elevatorDrive(Panel* p, State* s){
 	}
 	hardware_command_stop_light(0);
     
-    if (check_if_orders(p) == true){
+    if (checkIfOrders(p) == true){
     	
     	int nextFloor = closestFloor(p, s);
 
 		if (s->justPressedStop){		//For right startup between floors
 			
-			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == -1)){
-				s->Direction = 1;
+			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == DOWN)){
+				s->Direction = UP;
 				s->betweenFloors[0] = s->betweenFloors[1];
 				hardware_command_movement(HARDWARE_MOVEMENT_UP);
 			}
-			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == 1)){
-				s->Direction = 1;
+			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == UP)){
+				s->Direction = UP;
 				s->betweenFloors[1] = s->betweenFloors[0];
 				hardware_command_movement(HARDWARE_MOVEMENT_UP);
 			}
 
-			if (((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == -1)){
-				s->Direction = -1;
+			if (((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == DOWN)){
+				s->Direction = DOWN;
 				s->betweenFloors[1] = s->betweenFloors[0];
 				hardware_command_movement(HARDWARE_MOVEMENT_DOWN);	
 			}
-			if (((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == 1)){
-				s->Direction = -1;
+			if (((double)nextFloor < ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == UP)){
+				s->Direction = DOWN;
 				s->betweenFloors[0] = s->betweenFloors[1];
 				hardware_command_movement(HARDWARE_MOVEMENT_DOWN);	
 			}
@@ -56,7 +57,7 @@ void elevatorDrive(Panel* p, State* s){
     		clearExecuted(p, s);
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
            	s->reachedFloor = false;
-           	hardware_command_door_open(1);
+			hardware_command_door_open(1);
            	delay(p,3);
            	hardware_command_door_open(0);
     	}
@@ -65,11 +66,11 @@ void elevatorDrive(Panel* p, State* s){
 
             if((nextFloor - s->betweenFloors[0]) >= 0){
             	hardware_command_movement(HARDWARE_MOVEMENT_UP);
-            	s->Direction = 1;
+            	s->Direction = UP;
             }
             if((nextFloor - s->betweenFloors[0]) <= 0){
             	hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-            	s->Direction = -1;
+            	s->Direction = DOWN;
             }
 			
    		}
