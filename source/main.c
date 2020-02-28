@@ -47,8 +47,6 @@ int main(){
        		hardware_command_movement(HARDWARE_MOVEMENT_STOP);
        		break;
        	}
-       	
-       	p_state->prevFloor = p_state->betweenFloors[0];
     }
 
     return 0;

@@ -19,12 +19,10 @@
 * @brief cleanOrders function to clear all orders
 */
 typedef struct{
-	int prevFloor;
     int currentFloor;                               // -1 if between floors
     int betweenFloors[2];
     int Direction;
     bool reachedFloor;
-    bool justPressedStop;
 }State;
 
 /**

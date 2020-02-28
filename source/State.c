@@ -14,12 +14,10 @@ void stateDefault(State* Elevator){
             if (hardware_read_floor_sensor(i)){
                 hardware_command_movement(HARDWARE_MOVEMENT_STOP);
                 Elevator->currentFloor = i;
-                Elevator->prevFloor = Elevator->currentFloor;
                 Elevator->betweenFloors[0] = i;
                 Elevator->betweenFloors[1] = i;
                 Elevator->Direction = STOP;
                 Elevator->reachedFloor = true;
-                Elevator->justPressedStop = false;
                 validState = true;
                 break;
             }

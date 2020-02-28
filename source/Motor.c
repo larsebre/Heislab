@@ -12,7 +12,7 @@ void elevatorDrive(Panel* p, State* s){
 		hardware_command_stop_light(1);
 		cleanOrders(p->orders);
 		setOrderLights(p);
-		s->justPressedStop = true;
+		p->justPressedStop = true;
 
 		if (s->betweenFloors[0] == s->betweenFloors[1]){
 			hardware_command_door_open(1);
@@ -26,7 +26,7 @@ void elevatorDrive(Panel* p, State* s){
     	
     	int nextFloor = floorCalculations(p, s);
 
-		if (s->justPressedStop){		//For right startup between floors
+		if (p->justPressedStop){		//For right startup between floors
 			
 			if (((double)nextFloor > ((s->betweenFloors[0] + s->betweenFloors[1])/2.0)) && (s->Direction == DOWN)){
 				s->Direction = UP;
@@ -50,7 +50,7 @@ void elevatorDrive(Panel* p, State* s){
 				hardware_command_movement(HARDWARE_MOVEMENT_DOWN);	
 			}
 
-			s->justPressedStop = false;
+			p->justPressedStop = false;
 		}
     	
     	if (s->reachedFloor == true){

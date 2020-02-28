@@ -17,19 +17,17 @@
 /**
 * @brief Struct to contain information about buttons pushed on elevator panels
 * @param[out] orders Two-dimensional array containing information about incoming orders
-* @param[out] stop Boolean variable to indicate whether stop-button is pushed or not
-* @param[out] obstruction Boolean variable to indicate whether obstruction-switch is active or not
 */
 typedef struct{
 	int orders[8];
-	bool stop;
-	bool obstruction;
+	bool justPressedStop;
 }Panel;
 
 /**
 * @brief Enum containing numbers according to type of order
 */
 enum ORDERTYPE {ORDER_UP = 1, ORDER_INSIDE = 0, ORDER_DOWN = -1};
+enum OFFSET {DIR_OFFSET = 4};
 
 /**
 * @brief Function to clear all orders

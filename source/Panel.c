@@ -21,8 +21,7 @@ void cleanOrders(int* orders){
 void panelDefault(Panel* p){
 
 	cleanOrders(p->orders);
-	p->stop = false;
-	p->obstruction = false;
+	p->justPressedStop = false;
 }
 
 int checkOrders(int* orders, int floor){
@@ -41,7 +40,7 @@ void lsOrders(int* orders){
 		if (orders[i] == -1){			
 			for (unsigned int j = i; j <= 2; j++){
 				orders[j] = orders[j+1];
-				orders[j+4] = orders[j+1+4];
+				orders[j+DIR_OFFSET] = orders[j+1+DIR_OFFSET];
 			
 			}
 			break;
@@ -58,35 +57,20 @@ void pushOrders(Panel* p){
 				 if (checkOrders(p->orders, i)<0){
 				 	lsOrders(p->orders);
 					p->orders[3] = i;
-					if (i == 0){
-						p->orders[3+4] = 1;	
-					}else{
-						p->orders[3+4] = 1;
-					}
-					
+					p->orders[3+DIR_OFFSET] = 1;	
 				 }
+
 			}else if (hardware_read_order(i, HARDWARE_ORDER_INSIDE)){
 				if (checkOrders(p->orders, i)<0){
 					lsOrders(p->orders);
 				 	p->orders[3] = i;
-					if (i == 0){
-						p->orders[3+4] = 0;
-					}else if (i == 3){
-						p->orders[3+4] = 0;
-					}else{
-						p->orders[3+4] = 0;
-					}
-					
+					p->orders[3+DIR_OFFSET] = 0;
 				 }
 			}else if (hardware_read_order(i, HARDWARE_ORDER_DOWN)){
 				if (checkOrders(p->orders, i)<0){
 					lsOrders(p->orders);
 				 	p->orders[3] = i;
-					if (i == 3){
-						p->orders[3+4] = -1;	
-					}else{
-						p->orders[3+4] = -1;
-					}
+					p->orders[3+DIR_OFFSET] = -1;
 				}
 			}
 		}
@@ -152,7 +136,7 @@ bool seriesOfDowns(Panel* p){
 
 	bool serie = false;
 	for (unsigned int i = 0; i<=2; i++){
-		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+4] == ORDER_DOWN) && (p->orders[i+1+4] == ORDER_DOWN)){
+		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+DIR_OFFSET] == ORDER_DOWN) && (p->orders[i+1+DIR_OFFSET] == ORDER_DOWN)){
 			serie = true;
 		} 
 	}
@@ -163,7 +147,7 @@ bool seriesOfUps(Panel* p){
 
 	bool serie = false;
 	for (unsigned int i = 0; i<=2; i++){
-		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+4] == ORDER_UP) && (p->orders[i+1+4] == ORDER_UP)){
+		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+DIR_OFFSET] == ORDER_UP) && (p->orders[i+1+DIR_OFFSET] == ORDER_UP)){
 			 serie = true;
 		}
 	}
@@ -184,7 +168,7 @@ int floorCalculations(Panel* p, State* s){
 					return minValue(p,s);
 				}
 					
-				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i+4] != ORDER_UP) && (p->orders[i] <= currentFloor)){
+				if(((currentFloor - p->orders[i]) <= distance) && (p->orders[i] != -1) && (p->orders[i+DIR_OFFSET] != ORDER_UP) && (p->orders[i] <= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
 				}
@@ -199,7 +183,7 @@ int floorCalculations(Panel* p, State* s){
 					return maxValue(p,s);
 				}
 
-				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i+4] != ORDER_DOWN) && (p->orders[i] >= currentFloor)){
+				if(((currentFloor - p->orders[i]) >= distance) && (p->orders[i] != -1) && (p->orders[i+DIR_OFFSET] != ORDER_DOWN) && (p->orders[i] >= currentFloor)){
 					distance = currentFloor - p->orders[i];
 					destination = p->orders[i];
 				}
@@ -215,15 +199,15 @@ void clearExecuted(Panel* p, State* s){
 	
 	for (int i = 0; i<=3; i++){
 		if (p->orders[i] == s->betweenFloors[0]){
-			if (p->orders[i+4] == ORDER_DOWN){
+			if (p->orders[i+DIR_OFFSET] == ORDER_DOWN){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_DOWN, 0);
-			}else if(p->orders[i+4] == ORDER_INSIDE){
+			}else if(p->orders[i+DIR_OFFSET] == ORDER_INSIDE){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_INSIDE, 0);
-			}else if(p->orders[i+4] == ORDER_UP){
+			}else if(p->orders[i+DIR_OFFSET] == ORDER_UP){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_UP, 0);
 			}
 			p->orders[i] = -1;
-			p->orders[i+4] = -1;
+			p->orders[i+DIR_OFFSET] = -1;
 		}
 	}
 }
@@ -245,11 +229,11 @@ void floorReached(Panel* p, State* s){
 void setOrderLights(Panel* p){
 	for (int i = 0; i<=3; i++){
 		if(p->orders[i] != -1){
-			if (p->orders[i+4] == ORDER_DOWN){
+			if (p->orders[i+DIR_OFFSET] == ORDER_DOWN){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_DOWN, 1);
-			}else if(p->orders[i+4] == ORDER_INSIDE){
+			}else if(p->orders[i+DIR_OFFSET] == ORDER_INSIDE){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_INSIDE, 1);
-			}else if(p->orders[i+4] == ORDER_UP){
+			}else if(p->orders[i+DIR_OFFSET] == ORDER_UP){
 				hardware_command_order_light(p->orders[i], HARDWARE_ORDER_UP, 1);
 			}
 		}
