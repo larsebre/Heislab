@@ -137,8 +137,29 @@ bool seriesOfDowns(Panel* p){
 	bool serie = false;
 	for (unsigned int i = 0; i<=2; i++){
 		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+DIR_OFFSET] == ORDER_DOWN) && (p->orders[i+1+DIR_OFFSET] == ORDER_DOWN)){
+			int a = p->orders[i];
+			int b = p->orders[i+1];
 			serie = true;
-		} 
+			for (unsigned int i = 0; i <= 3; i++){
+				if (((p->orders[i] > a) && (p->orders[i] < b)) || ((p->orders[i] < a) && (p->orders[i] > b))){
+					if (p->orders[i + DIR_OFFSET] == ORDER_UP){
+						serie = false;
+					}
+				}
+			}
+		}
+		if((i <= 1) && ((p->orders[i] != -1) && (p->orders[i+2] != -1) && (p->orders[i+DIR_OFFSET] == ORDER_DOWN) && (p->orders[i+2+DIR_OFFSET] == ORDER_DOWN))){
+			int a = p->orders[i];
+			int b = p->orders[i+2];
+			serie = true;
+			for (unsigned int i = 0; i <= 3; i++){
+				if (((p->orders[i] > a) && (p->orders[i] < b)) || ((p->orders[i] < a) && (p->orders[i] > b))){
+					if (p->orders[i + DIR_OFFSET] == ORDER_UP){
+						serie = false;
+					}
+				}
+			}
+		}
 	}
 	return serie;
 }
@@ -148,7 +169,28 @@ bool seriesOfUps(Panel* p){
 	bool serie = false;
 	for (unsigned int i = 0; i<=2; i++){
 		if ((p->orders[i] != -1) && (p->orders[i+1] != -1) && (p->orders[i+DIR_OFFSET] == ORDER_UP) && (p->orders[i+1+DIR_OFFSET] == ORDER_UP)){
-			 serie = true;
+			int a = p->orders[i];
+			int b = p->orders[i+1];
+			serie = true;
+			for (unsigned int i = 0; i <= 3; i++){
+				if (((p->orders[i] > a) && (p->orders[i] < b)) || ((p->orders[i] < a) && (p->orders[i] > b))){
+					if (p->orders[i + DIR_OFFSET] == ORDER_DOWN){
+						serie = false;
+					}
+				}
+			}
+		}
+		if((i <= 1) && ((p->orders[i] != -1) && (p->orders[i+2] != -1) && (p->orders[i+DIR_OFFSET] == ORDER_UP) && (p->orders[i+2+DIR_OFFSET] == ORDER_UP))){
+			int a = p->orders[i];
+			int b = p->orders[i+2];
+			serie = true;
+			for (unsigned int i = 0; i <= 3; i++){
+				if (((p->orders[i] > a) && (p->orders[i] < b)) || ((p->orders[i] < a) && (p->orders[i] > b))){
+					if (p->orders[i + DIR_OFFSET] == ORDER_DOWN){
+						serie = false;
+					}
+				}
+			}
 		}
 	}
 	return serie;
@@ -159,6 +201,11 @@ int floorCalculations(Panel* p, State* s){
 	int direction = s->Direction;
 	int currentFloor = s->betweenFloors[0];
 	int destination = minValue(p,s);
+	if (direction == UP){
+		destination = maxValue(p,s);
+	}else{
+		destination = minValue(p,s);
+	}
 	int distance;
 	switch (direction){
 		case DOWN:
@@ -219,7 +266,7 @@ void floorReached(Panel* p, State* s){
 	if (checkIfOrders(p) == true){
 		if (floor == s->betweenFloors[0]){
         	s->reachedFloor = true;
-
+			clearExecuted(p, s);
     	}else{
         	s->reachedFloor = false;
     	}  

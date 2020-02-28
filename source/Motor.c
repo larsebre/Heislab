@@ -54,25 +54,27 @@ void elevatorDrive(Panel* p, State* s){
 		}
     	
     	if (s->reachedFloor == true){
-    		clearExecuted(p, s);
-            hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-           	s->reachedFloor = false;
-			hardware_command_door_open(1);
-           	delay(p,3);
-           	hardware_command_door_open(0);
+			if (s->betweenFloors[0] == s->betweenFloors[1]){
+            	hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+				hardware_command_door_open(1);
+           		delay(p,3);
+           		hardware_command_door_open(0);
+				s->reachedFloor = false;
+			}
     	}
     	
     	if(s->reachedFloor == false){
 
-            if((nextFloor - s->betweenFloors[0]) >= 0){
-            	hardware_command_movement(HARDWARE_MOVEMENT_UP);
+			if (s->betweenFloors[0] == s->betweenFloors[1]){
+				if((nextFloor - s->betweenFloors[0]) >= 0){
+            		hardware_command_movement(HARDWARE_MOVEMENT_UP);
             	s->Direction = UP;
-            }
-            if((nextFloor - s->betweenFloors[0]) <= 0){
-            	hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-            	s->Direction = DOWN;
-            }
-			
+            	}
+            	if((nextFloor - s->betweenFloors[0]) <= 0){
+            		hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+            		s->Direction = DOWN;
+            	}
+			}	
    		}
     }else{
     	hardware_command_movement(HARDWARE_MOVEMENT_STOP);

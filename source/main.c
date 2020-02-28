@@ -37,10 +37,10 @@ int main(){
   		printf("%d", nextFloor);
 		printf("\n");
 		
+		stateControl(p_state);
 		floorReached(p_panel, p_state);
 		pushOrders(p_panel);
 		setOrderLights(p_panel);
-		stateControl(p_state);
 		elevatorDrive(p_panel, p_state);
        	
 		if(hardware_read_stop_signal()&&hardware_read_obstruction_signal()){
