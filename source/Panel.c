@@ -22,6 +22,7 @@ void panelDefault(Panel* p){
 
 	cleanOrders(p->orders);
 	p->justPressedStop = false;
+	p->noOrders = true;
 }
 
 int checkOrders(int* orders, int floor){
@@ -266,7 +267,7 @@ void floorReached(Panel* p, State* s){
 	if (checkIfOrders(p) == true){
 		if (floor == s->betweenFloors[0]){
         	s->reachedFloor = true;
-			clearExecuted(p, s);
+			clearExecuted(p,s);
     	}else{
         	s->reachedFloor = false;
     	}  

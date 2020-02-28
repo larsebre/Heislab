@@ -21,6 +21,7 @@
 typedef struct{
 	int orders[8];
 	bool justPressedStop;
+	bool noOrders;
 }Panel;
 
 /**

@@ -24,6 +24,8 @@ void elevatorDrive(Panel* p, State* s){
     
     if (checkIfOrders(p) == true){
     	
+		p->noOrders = true;
+
     	int nextFloor = floorCalculations(p, s);
 
 		if (p->justPressedStop){		//For right startup between floors
@@ -55,11 +57,11 @@ void elevatorDrive(Panel* p, State* s){
     	
     	if (s->reachedFloor == true){
 			if (s->betweenFloors[0] == s->betweenFloors[1]){
+				s->reachedFloor = false;
             	hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 				hardware_command_door_open(1);
            		delay(p,3);
            		hardware_command_door_open(0);
-				s->reachedFloor = false;
 			}
     	}
     	
@@ -68,7 +70,7 @@ void elevatorDrive(Panel* p, State* s){
 			if (s->betweenFloors[0] == s->betweenFloors[1]){
 				if((nextFloor - s->betweenFloors[0]) >= 0){
             		hardware_command_movement(HARDWARE_MOVEMENT_UP);
-            	s->Direction = UP;
+            		s->Direction = UP;
             	}
             	if((nextFloor - s->betweenFloors[0]) <= 0){
             		hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
@@ -78,5 +80,11 @@ void elevatorDrive(Panel* p, State* s){
    		}
     }else{
     	hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+		if ((p->noOrders == true) && (s->betweenFloors[0] == s->betweenFloors[1])){
+			hardware_command_door_open(1);
+           	delay(p,3);
+           	hardware_command_door_open(0);
+		}
+		p->noOrders = false;
     }  
 }

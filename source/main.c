@@ -37,9 +37,9 @@ int main(){
   		printf("%d", nextFloor);
 		printf("\n");
 		
+		pushOrders(p_panel);
 		stateControl(p_state);
 		floorReached(p_panel, p_state);
-		pushOrders(p_panel);
 		setOrderLights(p_panel);
 		elevatorDrive(p_panel, p_state);
        	
